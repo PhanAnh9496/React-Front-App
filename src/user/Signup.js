@@ -9,12 +9,14 @@ class Signup extends Component {
     		name: "",
     		email: "",
     		password: "",
-    		error: ""	
+    		error: "",
+    		open: false	
     	};
     }
 
     handleChange = (name) => (event) => {
-    	this.setState({[name]: event.target.value})
+    	this.setState({error: ""});
+    	this.setState({[name]: event.target.value});
     }
 
     clickSubmit = event => {
@@ -26,10 +28,30 @@ class Signup extends Component {
     		password
     	}
 
- 		fetch("http://localhost:3000/signup", {
+    	this.signup(user)
+    		.then(data => {
+    			if (data.error) {
+    				this.setState({error: data.error});
+    			}
+    			else {
+    				this.setState({
+    					name: "",
+    					email: "",
+    					password: "",
+    					error: "",
+    					open: true
+    				});
+    			}
+    		});
+
+    }
+
+    signup = (user) =>{
+    	return fetch("http://localhost:8080/signup", {
  			method: "POST",
- 			header: {
- 				Accept: "application/json"
+ 			headers: {
+ 				Accept: "application/json",
+ 				"Content-Type": "application/json",	
  			},
  			body: JSON.stringify(user)
  		})
@@ -37,14 +59,19 @@ class Signup extends Component {
  			return response.json();
  		})
  		.catch(err => console.log(err));
-
     }
 
     render() {
-    	const {name, email, password} = this.state
+    	const {name, email, password, error, open} = this.state
         return (
         	<div className="container">
             	<h2 className="mt-5 mb-5">Signup</h2>
+            	<div className="alert alert-danger" style={{display:error ? '' : 'none'}}>
+            		{error}
+            	</div>
+            	<div className="alert alert-info" style={{display:open ? '' : 'none'}}>
+            		Tạo tài khoản thành công. Mời bạn đăng nhập.
+            	</div>
             	<form>
 					<div className="form-group">
 						<label className="text-muted">Name</label>
