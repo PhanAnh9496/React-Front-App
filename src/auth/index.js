@@ -1,5 +1,6 @@
 export const signup = (user) => {
-    return fetch("http://localhost:8080/signup", {
+    // `${process.env.REACT_APP_API_URL}/signup`
+    return fetch(`http://localhost:8080/signup`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -14,6 +15,7 @@ export const signup = (user) => {
 };
 
 export const signin = (user) => {
+    // `${process.env.REACT_APP_API_URL}/signin`
     return fetch("http://localhost:8080/signin", {
             method: "POST",
             headers: {
@@ -40,7 +42,8 @@ export const signout = (next) => {
 		localStorage.removeItem("jwt");
 	}
 	next();
-	return fetch("http://localhost:8080/signout", {
+    // `${process.env.REACT_APP_API_URL}/signout`
+	return fetch(`http://localhost:8080/signout`, {
 		method: "GET"
 	})
 		.then((response) => {
