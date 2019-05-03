@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {isAuthenticated} from '../auth/index';
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
+import { read } from "./apiUser";
 
 class Profile extends Component {
 
@@ -12,21 +13,11 @@ class Profile extends Component {
         }
     }
 
-    componentDidMount() {
-        const userId = this.props.match.params.userId;
-        // `${process.env.REACT_APP_API_URL}/user/${userId}`
-        // http://localhost:8080/user/
-        fetch(`http://localhost:8080/user/${userId}`, {
-                method: "GET",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${isAuthenticated().token}`
-                }
-            })
-            .then(response => {
-                return response.json()
-            })
+    
+
+    init = (userId) => {
+    	const token = isAuthenticated().token;
+       	read(userId, token)
             .then(data => {
                 if (data.error) {
                     this.setState({
@@ -37,12 +28,18 @@ class Profile extends Component {
                         user: data
                     });
                 }
-            })
+            });
+
+    };
+
+    componentDidMount() {
+        const userId = this.props.match.params.userId;
+      	this.init(userId);
     }
 
     render() {
 
-    	const redirectToSignin = this.state.redirectToSignin;
+    	const {redirectToSignin, user} = this.state;
     	if (redirectToSignin) {
     		return <Redirect to="/signin" />
     	}
@@ -50,10 +47,27 @@ class Profile extends Component {
         return ( 
 
         	<div className = "container">
-            <h2 className = "mt-5 mb-5"> Profile </h2> 
-            <p> Xin chào {isAuthenticated().user.name} </p> 
-            <p> Email: {isAuthenticated().user.email} </p> 
-            <p>{`Tham gia: ${new Date(this.state.user.created).toDateString()}`}</p> 
+        		<div className="row">
+	        		<div className="col-md-6">
+	        			<h2 className = "mt-5 mb-5"> Profile </h2> 
+			            <p> Xin chào {isAuthenticated().user.name} </p> 
+			            <p> Email: {isAuthenticated().user.email} </p> 
+			            <p>{`Tham gia: ${new Date(user.created).toDateString()}`}</p> 
+	        		</div>
+	        		<div className="col-md-6">
+	        			{isAuthenticated().user && isAuthenticated().user._id === user._id && (
+	        				<div className="d-inline-block mt-5">
+	        					<Link className="btn btn-raised btn-success mr-5" 
+	        						to={`/user/edit/${user._id}`}>
+	        							Edit ProFile
+	        					</Link>
+	        					<button type="button" className="btn btn-raised btn-danger">
+	        						Delete Profile
+	        					</button>
+	        				</div>
+	        			)}
+	        		</div>
+	            </div>
             </div>
         );
     }
