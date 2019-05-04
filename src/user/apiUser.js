@@ -17,10 +17,7 @@ export const read = (userId, token) => {
 
 export const list = () => {
     return fetch(`http://localhost:8080/users`, {
-            method: "GET",
-            headers: {
-                Accept: "application/json"
-            }
+            method: "GET"
         })
         .then(response => {
             return response.json()

@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {isAuthenticated} from '../auth/index';
 import {Redirect, Link} from 'react-router-dom';
 import { read } from "./apiUser";
+import DefaultProfile from '../images/avatar.png';
+
 
 class Profile extends Component {
 
@@ -47,16 +49,23 @@ class Profile extends Component {
         return ( 
 
         	<div className = "container">
+                <h2 className = "mt-5 mb-5"> Profile </h2>
         		<div className="row">
 	        		<div className="col-md-6">
-	        			<h2 className = "mt-5 mb-5"> Profile </h2> 
-			            <p> Xin chào {isAuthenticated().user.name} </p> 
-			            <p> Email: {isAuthenticated().user.email} </p> 
-			            <p>{`Tham gia: ${new Date(user.created).toDateString()}`}</p> 
+                        <img className="card-img-top" 
+                            src={DefaultProfile} 
+                            alt={user.name} 
+                            style={{width:'23rem', height: '25vw', objectFit: 'cover'}} 
+                        />
 	        		</div>
 	        		<div className="col-md-6">
+                        <div className="lead mt-2">
+                            <p> Xin chào {user.name} </p> 
+                            <p> Email: {user.email} </p> 
+                            <p>{`Tham gia: ${new Date(user.created).toDateString()}`}</p> 
+                        </div>
 	        			{isAuthenticated().user && isAuthenticated().user._id === user._id && (
-	        				<div className="d-inline-block mt-5">
+	        				<div className="d-inline-block">
 	        					<Link className="btn btn-raised btn-success mr-5" 
 	        						to={`/user/edit/${user._id}`}>
 	        							Edit ProFile

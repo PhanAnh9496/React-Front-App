@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {signup} from '../auth/index';
+import {Link} from 'react-router-dom'
 
 class Signup extends Component {
 
@@ -91,7 +92,7 @@ class Signup extends Component {
             		{error}
             	</div>
             	<div className="alert alert-info" style={{display:open ? '' : 'none'}}>
-            		Tạo tài khoản thành công. Mời bạn đăng nhập.
+            		Tạo tài khoản thành công. Mời bạn <Link to="/signin">đăng nhập</Link> .
             	</div>
             	{this.signupForm(name, email, password)}
             </div>	
