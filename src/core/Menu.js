@@ -45,10 +45,10 @@ const Menu = ({history}) => (
 			{isAuthenticated() && (
 				<>
 					<li className="nav-item">
-						<a className="nav-link" style={isActive(history, "/signup"), {cursor:"pointer", color:"#fff"}} 
+						<span className="nav-link" style={isActive(history, "/signup"), {cursor:"pointer", color:"#fff"}} 
 							onClick={() => signout(() => history.push("/"))}>
-							Sign Out
-						</a>
+								Sign Out
+						</span>
 					</li>
 					<li className="nav-item">
 						<Link to={`/user/${isAuthenticated().user._id}`}

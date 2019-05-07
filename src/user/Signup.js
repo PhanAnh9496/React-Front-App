@@ -84,7 +84,7 @@ class Signup extends Component {
     );
 
     render() {
-    	const {name, email, password, error, open} = this.state
+    	const {name, email, password, error, open} = this.state;
         return (
         	<div className="container">
             	<h2 className="mt-5 mb-5">Signup</h2>
