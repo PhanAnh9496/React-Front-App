@@ -152,11 +152,13 @@ class EditProfile extends Component {
     	if (redirectToProfile) {
     		return <Redirect to={`/user/${id}`} />;
     	}
+
         const photoUrl = id
             ? `${
                   process.env.REACT_APP_API_URL
               }/user/photo/${id}?${new Date().getTime()}`
             : DefaultProfile;
+
         return (
             <div className="container">
             	<h2 className="mt-5 mb-5">Edit Profile</h2>
@@ -166,6 +168,7 @@ class EditProfile extends Component {
                 {
                     loading ? (<div className="jumbotron text-center"><h2>Loading...</h2></div>) : ("")
                 }
+                
                 <img
                     style={{ height: "200px", width: "auto" }}
                     className="img-thumbnail"
