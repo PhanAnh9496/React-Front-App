@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {isAuthenticated} from '../auth/index';
-import { read, update } from "./apiUser";
+import { read, update, updateUser } from "./apiUser";
 import { Redirect } from "react-router-dom";
 import DefaultProfile from '../images/avatar.png';
 
@@ -15,7 +15,8 @@ class EditProfile extends Component {
         	redirectToProfile: false,
         	error: '', 
             fileSize: 0,
-            loading: false
+            loading: false,
+            about: ""
         }
     };
 
@@ -32,7 +33,8 @@ class EditProfile extends Component {
                         id: data._id,
                         name: data.name,
                         email: data.email,
-                        error: ''
+                        error: '',
+                        about: data.about
                     });
                 }
             });
@@ -57,17 +59,17 @@ class EditProfile extends Component {
         }
 
     	if (name.length === 0) {
-    		this.setState({error: "Bạn chưa nhập đúng tên"});
+    		this.setState({error: "Bạn chưa nhập đúng tên", loading: false});
     		return false;
     	}
 
     	if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-    		this.setState({error: "Bạn chưa nhập đúng email"});
+    		this.setState({error: "Bạn chưa nhập đúng email", loading: false});
     		return false;
     	}
 
     	if (password.length >= 1 && password.length <= 5) {
-    		this.setState({error: "Bạn chưa nhập đúng password"});
+    		this.setState({error: "Bạn chưa nhập đúng password", loading: false});
     		return false;
     	}
 
@@ -95,16 +97,18 @@ class EditProfile extends Component {
 	    				this.setState({error: data.error});
 	    			}
 	    			else {
-	    				this.setState({
-	    					redirectToProfile: true
-	    				});
+                        updateUser(data, () => {
+                            this.setState({
+                                redirectToProfile: true
+                            });
+                        });
 	    			}
 	    		});
     	}
 
     };
 
-    signupForm = (name, email, password) => (
+    signupForm = (name, email, password, about) => (
     	<form>
 			<div className="form-group">
 				<label className="text-muted">Profile Photo</label>
@@ -133,6 +137,17 @@ class EditProfile extends Component {
 					value = {email}
 				/>
 			</div>
+
+            <div className="form-group">
+                <label className="text-muted">About</label>
+                <textarea 
+                    onChange={this.handleChange("about")} 
+                    type="text" 
+                    className="form-control" 
+                    value = {about}
+                />
+            </div>
+
 			<div className="form-group">
 				<label className="text-muted">Password</label>
 				<input 
@@ -147,7 +162,7 @@ class EditProfile extends Component {
     );
 
     render() {
-    	const {id, name, email, password, redirectToProfile, error, loading} = this.state;
+    	const {id, name, email, password, redirectToProfile, error, loading, about} = this.state;
     	
     	if (redirectToProfile) {
     		return <Redirect to={`/user/${id}`} />;
@@ -177,7 +192,7 @@ class EditProfile extends Component {
                     alt={name}
                 />
 
-            	{this.signupForm(name, email, password, redirectToProfile)}
+            	{this.signupForm(name, email, password, about, redirectToProfile)}
             </div>
         );
     }

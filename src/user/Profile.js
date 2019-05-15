@@ -4,6 +4,7 @@ import {Redirect, Link} from 'react-router-dom';
 import { read } from "./apiUser";
 import DefaultProfile from '../images/avatar.png';
 import DeleteUser from './DeleteUser'
+import FollowProfileButton from './FollowProfileButton'
 
 
 class Profile extends Component {
@@ -76,7 +77,7 @@ class Profile extends Component {
                             <p> Email: {user.email} </p> 
                             <p>{`Tham gia: ${new Date(user.created).toDateString()}`}</p> 
                         </div>
-	        			{isAuthenticated().user && isAuthenticated().user._id === user._id && (
+	        			{isAuthenticated().user && isAuthenticated().user._id === user._id ? (
 	        				<div className="d-inline-block">
 	        					<Link className="btn btn-raised btn-success mr-5" 
 	        						to={`/user/edit/${user._id}`}>
@@ -84,9 +85,22 @@ class Profile extends Component {
 	        					</Link>
 	        					<DeleteUser userId={user._id} />
 	        				</div>
-	        			)}
+	        			) : (
+                            <FollowProfileButton
+                                following={this.state.following}
+                                onButtonClick={this.clickFollowButton}
+                            />
+                        )}
 	        		</div>
 	            </div>
+
+                <div className="row">
+                    <div className="col md-12 mt-5 mb-5">
+                        <hr/>
+                        <p className="lead">{user.about}</p>
+                        <hr/>
+                    </div>
+                </div>
             </div>
         );
     }
