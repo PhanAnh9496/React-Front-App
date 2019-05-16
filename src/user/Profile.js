@@ -3,8 +3,9 @@ import {isAuthenticated} from '../auth/index';
 import {Redirect, Link} from 'react-router-dom';
 import { read } from "./apiUser";
 import DefaultProfile from '../images/avatar.png';
-import DeleteUser from './DeleteUser'
-import FollowProfileButton from './FollowProfileButton'
+import DeleteUser from './DeleteUser';
+import FollowProfileButton from './FollowProfileButton';
+import ProfileTabs from "./ProfileTabs";
 
 
 class Profile extends Component {
@@ -12,11 +13,34 @@ class Profile extends Component {
     constructor() {
         super();
         this.state = {
-            user: "",
-            redirectToSignin: false
+            user: {following:[], followers: []},
+            redirectToSignin: false,
+            following: false,
+            error: ''
         }
     }
     
+    checkFollow = user => {
+        const jwt = isAuthenticated();
+        const match = user.followers.find(follower => {
+            return follower._id === jwt.user._id;
+        });
+        return match
+    };
+
+    clickFollowButton = callApi => {
+        const userId = isAuthenticated().user._id;
+        const token = isAuthenticated().token;
+
+        callApi(userId, token, this.state.user._id).then(data => {
+            if (data.error) {
+                this.setState({ error: data.error });
+            } else {
+                this.setState({ user: data, following: !this.state.following });
+            }
+        });
+    };
+
     init = (userId) => {
     	const token = isAuthenticated().token;
        	read(userId, token)
@@ -26,8 +50,10 @@ class Profile extends Component {
                         redirectToSignin: true
                     });
                 } else {
+                    let following = this.checkFollow(data);
                     this.setState({
-                        user: data
+                        user: data,
+                        following
                     });
                 }
             });
@@ -91,6 +117,7 @@ class Profile extends Component {
                                 onButtonClick={this.clickFollowButton}
                             />
                         )}
+
 	        		</div>
 	            </div>
 
@@ -99,6 +126,11 @@ class Profile extends Component {
                         <hr/>
                         <p className="lead">{user.about}</p>
                         <hr/>
+                         <ProfileTabs
+                            followers={user.followers}
+                            following={user.following}
+                            // posts={posts}
+                        />
                     </div>
                 </div>
             </div>
