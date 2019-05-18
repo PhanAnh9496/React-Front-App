@@ -1,10 +1,16 @@
-import React from 'react'
+import React from 'react';
+import Posts from "../post/Posts";
 
 const Home = () => (
-	<div className="jumbotron">
-		<h2>Home</h2>
-		<p className="lead">Welcome to React FrontEnd </p>
-	</div>	
+	<div>
+		<div className="jumbotron text-center">
+			<h2>Home</h2>
+			<p className="lead">Welcome to React FrontEnd </p>
+		</div>	
+		<div className="container">
+	        <Posts />
+	    </div>
+	</div>
 );
 
 export default Home;
