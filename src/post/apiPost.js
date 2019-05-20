@@ -24,3 +24,13 @@ export const list = page => {
         })
         .catch(err => console.log(err));
 };
+
+export const singlePost = postId => {
+    return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
+        method: "GET"
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
