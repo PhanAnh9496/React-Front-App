@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { singlePost } from "./apiPost";
 import DefaultPost from "../images/sp.jpg";
 import { Link, Redirect } from "react-router-dom";
-// import { isAuthenticated } from "../auth/index";
+import { isAuthenticated } from "../auth/index";
 // import Comment from "./Comment";
 
 class SinglePost extends Component {
@@ -66,6 +66,23 @@ class SinglePost extends Component {
                     >
                         Về Trang Chủ
                     </Link>
+                    {isAuthenticated().user &&
+                        isAuthenticated().user._id === post.postedBy._id && (
+                            <>
+                                <Link
+                                    to={`/post/edit/${post._id}`}
+                                    className="btn btn-raised btn-warning btn-sm mr-5"
+                                >
+                                    Update Post
+                                </Link>
+                                <button
+                                    onClick={this.deleteConfirmed}
+                                    className="btn btn-raised btn-danger"
+                                >
+                                    Delete Post
+                                </button>
+                            </>
+                        )}
                 </div>
             </div>
     	)
