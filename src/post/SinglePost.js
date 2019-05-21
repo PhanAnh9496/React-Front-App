@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { singlePost } from "./apiPost";
+import { singlePost, remove } from "./apiPost";
 import DefaultPost from "../images/sp.jpg";
 import { Link, Redirect } from "react-router-dom";
 import { isAuthenticated } from "../auth/index";
@@ -9,8 +9,8 @@ class SinglePost extends Component {
     
     state = {
         post: "",
-        // redirectToHome: false,
-        // redirectToSignin: false,
+        redirectToHome: false,
+        redirectToSignin: false,
         // like: false,
         // likes: 0,
         // comments: []
@@ -30,6 +30,27 @@ class SinglePost extends Component {
                 });
             }
         });
+    };
+
+    deletePost = () => {
+        const postId = this.props.match.params.postId;
+        const token = isAuthenticated().token;
+        remove(postId, token).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                this.setState({ redirectToHome: true });
+            }
+        });
+    };
+
+    deleteConfirmed = () => {
+        let answer = window.confirm(
+            "Bạn có muốn xóa bài viết này"
+        );
+        if (answer) {
+            this.deletePost();
+        }
     };
 
     renderPost = post => {
@@ -89,7 +110,15 @@ class SinglePost extends Component {
     };
 
     render() {
-    	const {post} = this.state;
+    	const {post, redirectToHome} = this.state;
+
+    	if (redirectToHome) {
+            return <Redirect to={`/`} />;
+        } 
+        // else if (redirectToSignin) {
+        //     return <Redirect to={`/signin`} />;
+        // }
+
         return (
             <div className="container">
             	<h2 className="display-2 mt-3 mb-3">{post.title}</h2>

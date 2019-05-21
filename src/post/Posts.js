@@ -77,7 +77,7 @@ class Posts extends Component {
                                     to={`/post/${post._id}`}
                                     className="btn btn-raised btn-primary btn-sm"
                                 >
-                                    Read more
+                                    Chi tiết
                                 </Link>
                             </div>
                         </div>
